@@ -1,0 +1,124 @@
+/* ═══ Landing — design foundation ═══
+   The landing page keeps the notebook's own design system: the two Estedad
+   faces, the warm paper palette, and the shared radius, shadow and motion
+   tokens. Nothing here is a new colour or a new rule — it is the same
+   foundation the app is drawn from. What is deliberately absent is everything
+   the landing never paints: the floating dock, the reader, the pick book,
+   settings, the four night palettes and the three other daylight ones. This
+   sheet holds only what landing.css and the page actually consume. */
+
+/* ── Fonts ──────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Estedad';
+  src: url('../assets/fonts/Estedad[wght].woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Estedad Mad';
+  src: url('../assets/fonts/Estedad-Mad.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+
+/* ── Palettes ─────────────────────────────────────────────────────────────
+   Paper is the landing's whole surface, so its fourteen values travel whole.
+   From sage the landing borrows only the guide's green — the accent every
+   button, icon and focus ring is painted with. */
+:root{
+  --pal-paper-bg:#f6efe3;
+  --pal-paper-surface:#fffcf5;
+  --pal-paper-elev:#ffffff;
+  --pal-paper-text:#2e2921;
+  --pal-paper-text2:#5d5548;
+  --pal-paper-muted:#8f8574;
+  --pal-paper-border:rgba(80,60,30,.10);
+  --pal-paper-border-strong:rgba(80,60,30,.22);
+  --pal-paper-accent:#e05f28;
+  --pal-paper-accent-strong:#c04a18;
+  --pal-paper-accent-soft:rgba(224,95,40,.13);
+  --pal-paper-tape:rgba(255,196,120,.50);
+  --pal-paper-glass:rgba(255,252,245,.72);
+  --pal-paper-on-accent:#1e1b18;
+
+  --pal-sage-accent:#4a6b44;
+  --pal-sage-accent-strong:#37522f;
+  --pal-sage-accent-soft:rgba(88,129,87,.16);
+  --pal-sage-on-accent:#ffffff;
+}
+
+/* ── Semantic names, pointed at paper ────────────────────────────────────
+   The same vocabulary the app uses. landing.css remaps the accent names onto
+   the sage green, so a focus ring and a button can never disagree. */
+:root{
+  --color-bg:var(--pal-paper-bg);
+  --color-surface:var(--pal-paper-surface);
+  --color-surface-elevated:var(--pal-paper-elev);
+  --color-text-primary:var(--pal-paper-text);
+  --color-text-secondary:var(--pal-paper-text2);
+  --color-text-muted:var(--pal-paper-muted);
+  --color-text-on-accent:var(--pal-paper-on-accent);
+  --color-border:var(--pal-paper-border);
+  --color-border-strong:var(--pal-paper-border-strong);
+  --color-accent:var(--pal-paper-accent);
+  --color-accent-strong:var(--pal-paper-accent-strong);
+  --color-accent-soft:var(--pal-paper-accent-soft);
+  --color-focus:var(--pal-paper-accent);
+
+  /* Legacy aliases the base rules below are written with */
+  --bg:var(--color-bg);
+  --surface:var(--color-surface);
+  --text:var(--color-text-primary);
+  --muted:var(--color-text-muted);
+  --accent:var(--color-accent);
+  --border:var(--color-border);
+
+  /* ── Radius Scale ── */
+  --radius-xs:8px;
+  --radius-sm:12px;
+  --radius-md:16px;
+  --radius-lg:20px;
+  --radius-xl:24px;
+  --radius-pill:999px;
+
+  /* ── Shadows ── */
+  --shadow-1:0 4px 14px -6px rgba(122,80,35,.18);
+  --shadow-2:0 24px 50px -24px rgba(122,80,35,.35);
+
+  /* ── Typography ── */
+  --font-ui: 'Estedad', system-ui, sans-serif;
+  --font-personality: 'Estedad Mad', 'Estedad', system-ui, sans-serif;
+
+  /* ── Motion ── */
+  --duration-fast:.18s;
+  --duration-base:.3s;
+  --duration-slow:.5s;
+  --ease-out:cubic-bezier(.22,1,.36,1);
+}
+
+/* ── Page ───────────────────────────────────────────────────────────────── */
+body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;overflow-x:hidden;transition:background var(--duration-slow),color var(--duration-slow);-webkit-tap-highlight-color:transparent;line-height:1.6}
+button{touch-action:manipulation;font-family:inherit}
+a,button,[role=button]{touch-action:manipulation}
+
+/* The paper grain the whole notebook is printed on — a fixed, non-interactive
+   texture layer. It is a data: SVG, which is why the landing's CSP allows
+   img-src data:. */
+body::after{content:'';position:fixed;inset:0;z-index:97;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ── Accessibility foundation ──────────────────────────────────────────── */
+:focus-visible{outline:2px solid var(--color-focus);outline-offset:2px;border-radius:var(--radius-xs)}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────
+   Ambient and decorative motion stops; state changes stay, just instant. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto!important}
+}

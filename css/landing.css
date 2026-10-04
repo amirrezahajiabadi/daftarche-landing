@@ -1,0 +1,724 @@
+/* ═══ Landing — صفحهٔ معرفی دَفتَرچه ═══
+   This sheet is only loaded by landing.html. It reuses the app's own design
+   system — fonts, palette table, radii, shadows and motion tokens all come from
+   css/base.css; nothing here invents a colour. The accent is the notebook's
+   green (the sage palette, the colour the guide character already is) rather
+   than the interface orange, because the landing's one job is the brand voice:
+   warm paper, deep charcoal ink, one quiet green.
+
+   All colours are palette tokens (--pal-*) mapped onto the semantic names, so
+   the same rule the app follows holds here: no raw hex inside a component. */
+
+:root {
+  /* ── Brand surface, from the paper palette ── */
+  --lp-bg: var(--pal-paper-bg);
+  --lp-surface: var(--pal-paper-surface);
+  --lp-text: var(--pal-paper-text);
+  --lp-text-2: var(--pal-paper-text2);
+  --lp-muted: var(--pal-paper-muted);
+  --lp-border: var(--pal-paper-border-strong);
+
+  /* ── One green accent, from the sage palette (the guide's own green) ── */
+  --lp-green: var(--pal-sage-accent);
+  --lp-green-strong: var(--pal-sage-accent-strong);
+  --lp-green-soft: var(--pal-sage-accent-soft);
+  --lp-on-green: var(--pal-sage-on-accent);
+
+  /* ── Layout rhythm ── */
+  --lp-max: 1180px;
+  --lp-gutter: clamp(20px, 5vw, 56px);
+  --lp-section: clamp(68px, 9vw, 132px);
+
+  /* ── Point the app's semantic names at the landing's green, so every rule in
+        base.css that draws with --color-accent (focus rings included) lands on
+        the same accent the landing paints with. A later stylesheet with equal
+        specificity wins, which is why this file must load after base.css. ── */
+  --color-accent: var(--lp-green);
+  --color-accent-strong: var(--lp-green-strong);
+  --color-accent-soft: var(--lp-green-soft);
+  --color-focus: var(--lp-green);
+  --color-text-on-accent: var(--lp-on-green);
+}
+
+/* The landing is a fixed brand surface: it is always the warm paper, never the
+   reader's chosen app theme. Declaring the scheme keeps form controls, the
+   scrollbar and the canvas behind a scroll in that same daylight. */
+html { color-scheme: light; }
+
+body {
+  background: var(--lp-bg);
+  color: var(--lp-text);
+}
+
+/* ═══ Helpers ═══ */
+.lp-wrap {
+  width: 100%;
+  max-width: var(--lp-max);
+  margin-inline: auto;
+  padding-inline: var(--lp-gutter);
+}
+
+.lp-section {
+  padding-block: var(--lp-section);
+}
+
+.lp-skip {
+  position: absolute;
+  inset-inline: 0;
+  top: 8px;
+  width: max-content;
+  margin-inline: auto;
+  transform: translateY(-200%);
+  z-index: 100;
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--lp-green);
+  color: var(--lp-on-green);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+.lp-skip:focus { transform: none; }
+
+/* ═══ Type ═══ */
+.lp-display {
+  font-family: var(--font-personality);
+  font-size: clamp(2rem, 4.6vw, 3.5rem);
+  line-height: 1.24;
+  font-weight: 700;
+  color: var(--lp-text);
+  text-wrap: balance;
+}
+
+.lp-h2 {
+  font-family: var(--font-personality);
+  font-size: clamp(1.55rem, 3.1vw, 2.4rem);
+  line-height: 1.35;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.lp-eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--lp-green);
+  margin-bottom: 14px;
+}
+
+.lp-lead {
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.95;
+  color: var(--lp-text-2);
+  max-width: 46ch;
+}
+
+.lp-sub {
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--lp-muted);
+}
+
+.lp-emph {
+  display: inline;
+  /* A highlighter, not a gradient: the paper's own green wash under the line */
+  background: linear-gradient(transparent 58%, var(--lp-green-soft) 58%, var(--lp-green-soft) 92%, transparent 92%);
+  font-style: normal;
+}
+
+/* ═══ Buttons ═══ */
+.lp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  padding: 14px 26px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: transform var(--duration-fast) var(--ease-out),
+              background var(--duration-fast), border-color var(--duration-fast),
+              box-shadow var(--duration-fast), color var(--duration-fast);
+}
+
+.lp-btn-primary {
+  background: var(--lp-green);
+  color: var(--lp-on-green);
+  box-shadow: var(--shadow-1);
+}
+.lp-btn-ghost {
+  background: var(--lp-surface);
+  border-color: var(--lp-border);
+  color: var(--lp-text);
+}
+
+/* Hover is a desktop enhancement, never a touch state (same guard as base.css) */
+@media (hover: hover) {
+  .lp-btn-primary:hover { background: var(--lp-green-strong); transform: translateY(-2px); box-shadow: var(--shadow-2); }
+  .lp-btn-ghost:hover   { border-color: var(--lp-green); color: var(--lp-green); transform: translateY(-2px); }
+}
+.lp-btn-primary:active,
+.lp-btn-ghost:active { transform: translateY(0); }
+
+/* A CTA whose destination does not exist yet. It is not a link and not in the
+   tab order, so it can never send anyone to a made-up address. */
+.lp-btn-soon {
+  background: transparent;
+  border: 1.5px dashed var(--lp-border);
+  color: var(--lp-muted);
+  cursor: default;
+}
+.lp-soon-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--lp-green-soft);
+  color: var(--lp-green-strong);
+}
+
+.lp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+/* ═══ Header ═══ */
+.lp-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--lp-bg);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--duration-base), box-shadow var(--duration-base);
+}
+.lp-header.is-scrolled {
+  border-bottom-color: var(--lp-border);
+  box-shadow: var(--shadow-1);
+}
+.lp-header-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 68px;
+}
+
+.lp-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--lp-text);
+  margin-inline-end: auto;
+}
+.lp-brand img { width: 32px; height: 32px; display: block; }
+.lp-brand span {
+  font-family: var(--font-personality);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.lp-nav ul {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+}
+.lp-nav a {
+  display: inline-block;
+  padding: 9px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--lp-text-2);
+  text-decoration: none;
+  transition: color var(--duration-fast), background var(--duration-fast);
+}
+@media (hover: hover) {
+  .lp-nav a:hover { color: var(--lp-green); background: var(--lp-green-soft); }
+}
+
+.lp-header .lp-cta { padding: 11px 20px; font-size: 14px; }
+
+.lp-menu-btn {
+  display: none;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border: 1.5px solid var(--lp-border);
+  border-radius: var(--radius-sm);
+  background: var(--lp-surface);
+  color: var(--lp-text);
+  cursor: pointer;
+}
+.lp-menu-btn svg { width: 22px; height: 22px; margin: auto; display: block; }
+.lp-menu-btn .lp-close { display: none; }
+.lp-header[data-open="true"] .lp-menu-btn .lp-open { display: none; }
+.lp-header[data-open="true"] .lp-menu-btn .lp-close { display: block; }
+
+@media (max-width: 880px) {
+  .lp-menu-btn { display: grid; }
+  .lp-nav {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    display: none;
+    padding: 6px 0 14px;
+    background: var(--lp-bg);
+    border-bottom: 1px solid var(--lp-border);
+  }
+  .lp-header[data-open="true"] .lp-nav { display: block; }
+  .lp-nav ul { flex-direction: column; align-items: stretch; gap: 0; }
+  .lp-nav a { padding: 14px 16px; border-radius: var(--radius-sm); font-size: 16px; }
+}
+
+/* ═══ Hero ═══ */
+.lp-hero { padding-block: clamp(40px, 7vw, 96px) clamp(48px, 8vw, 110px); }
+.lp-hero-grid {
+  display: grid;
+  gap: clamp(36px, 6vw, 76px);
+  align-items: center;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 920px) {
+  .lp-hero-grid { grid-template-columns: 1.06fr .94fr; }
+}
+.lp-hero-note {
+  margin-top: 22px;
+  font-size: 13px;
+  color: var(--lp-muted);
+}
+.lp-hero-copy { position: relative; }
+
+/* Very subtle guide presence: a low-opacity character that bobs a few pixels. */
+.lp-hero-char,
+.lp-final-char {
+  display: block;
+  width: 74px;
+  height: auto;
+  opacity: .5;
+  pointer-events: none;
+  animation: lpBob 6.5s ease-in-out infinite;
+}
+.lp-hero-char { position: absolute; inset-inline-start: -4px; top: -58px; width: 70px; }
+/* On a phone the hero's top padding is too thin for a peeking character to clear
+   the sticky header, so it is drawn smaller and closer to the eyebrow. */
+/* On a phone the header is tight, so the wordmark, the mark and the CTA are
+   trimmed together rather than letting the CTA wrap or slide off the edge. */
+@media (max-width: 640px) {
+  .lp-header-inner { gap: 10px; }
+  .lp-brand img { width: 28px; height: 28px; }
+  .lp-brand span { font-size: 19px; }
+  .lp-menu-btn { width: 42px; height: 42px; }
+  .lp-header .lp-cta { padding: 10px 15px; font-size: 13px; }
+  .lp-hero-char { top: -16px; inset-inline-start: auto; inset-inline-end: 0; width: 52px; opacity: .45; }
+}
+
+/* ═══ The framed screenshot (the real product, not a mockup) ═══
+   The app's page is the same paper as the landing, so the frame's lighter
+   surface and a hairline are what give the capture an edge. No browser chrome,
+   no invented UI — just the screen inside a quiet bezel. */
+.lp-shot {
+  display: block;
+  margin: 0;
+  padding: 10px;
+  border-radius: calc(var(--radius-xl) + 8px);
+  background: var(--lp-surface);
+  border: 1px solid var(--lp-border);
+  box-shadow: var(--shadow-2);
+}
+.lp-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+}
+
+/* ═══ Problem ═══ */
+.lp-problem-head { max-width: 62ch; }
+.lp-problem-grid {
+  display: grid;
+  gap: 18px;
+  margin-top: clamp(30px, 4vw, 52px);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px) { .lp-problem-grid { grid-template-columns: repeat(3, 1fr); } }
+.lp-problem-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 26px 24px;
+  border-radius: var(--radius-lg);
+  background: var(--lp-surface);
+  border: 1px solid var(--lp-border);
+}
+.lp-ico {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  background: var(--lp-green-soft);
+  color: var(--lp-green-strong);
+}
+.lp-ico svg { width: 26px; height: 26px; }
+.lp-problem-card h3 {
+  font-family: var(--font-personality);
+  font-size: 18px;
+  font-weight: 700;
+}
+.lp-problem-card p { font-size: 14.5px; line-height: 1.85; color: var(--lp-text-2); }
+
+/* ═══ Decision Layer — the centre of the page ═══ */
+.lp-why { background: var(--lp-surface); border-block: 1px solid var(--lp-border); }
+.lp-why-head { max-width: 70ch; }
+.lp-why-head .lp-h2 { margin-bottom: 18px; }
+.lp-why-head .lp-emph { margin-block-start: 6px; }
+
+.lp-flow {
+  display: grid;
+  gap: 26px;
+  margin-top: clamp(34px, 5vw, 60px);
+  list-style: none;
+  counter-reset: none;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px) { .lp-flow { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1040px) { .lp-flow { grid-template-columns: repeat(5, 1fr); gap: 16px; } }
+
+.lp-flow li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 20px;
+  border-radius: var(--radius-lg);
+  background: var(--lp-bg);
+  border: 1px solid var(--lp-border);
+}
+/* The connector: a soft dashed thread through the row, hidden on the narrow
+   columns where the cards stack and there is no single line to follow. */
+@media (min-width: 1040px) {
+  .lp-flow li::after {
+    content: '';
+    position: absolute;
+    inset-inline-start: -16px;
+    top: 46px;
+    width: 16px;
+    border-top: 2px dashed var(--lp-border);
+  }
+  .lp-flow li:last-child::after { display: none; }
+}
+
+.lp-flow-ico {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  display: grid;
+  place-items: center;
+  background: var(--lp-green-soft);
+  color: var(--lp-green-strong);
+}
+.lp-flow-ico svg { width: 22px; height: 22px; }
+.lp-flow-en {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--lp-muted);
+}
+.lp-flow-fa {
+  font-family: var(--font-personality);
+  font-size: 17px;
+  font-weight: 700;
+}
+.lp-flow p { font-size: 13.5px; line-height: 1.8; color: var(--lp-text-2); }
+
+/* ═══ Product Showcase — a varied bento, never text→shot→text→shot ═══ */
+.lp-features-head { max-width: 60ch; }
+.lp-bento {
+  display: grid;
+  gap: 20px;
+  margin-top: clamp(30px, 4vw, 52px);
+  grid-template-columns: 1fr;
+  /* Cards keep their own height instead of stretching to their neighbour, so a
+     text card never grows a hollow middle just to match a tall screenshot. */
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .lp-bento { grid-template-columns: repeat(12, 1fr); }
+  .lp-feat-a { grid-column: span 7; }
+  .lp-feat-b { grid-column: span 5; }
+  .lp-feat-c { grid-column: span 5; }
+  .lp-feat-d { grid-column: span 7; }
+}
+.lp-feat {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 26px;
+  border-radius: var(--radius-xl);
+  background: var(--lp-surface);
+  border: 1px solid var(--lp-border);
+}
+.lp-feat-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--lp-green);
+}
+.lp-feat h3 {
+  font-family: var(--font-personality);
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.4;
+}
+.lp-feat p { font-size: 14.5px; line-height: 1.9; color: var(--lp-text-2); }
+.lp-feat-media { margin-top: 6px; }
+.lp-feat-media .lp-shot { box-shadow: var(--shadow-1); max-width: 420px; margin-inline: auto; }
+
+/* The decision "receipt" — how the What-Now answer is explained. Real text and
+   the app's own tokens, not a drawn-up fake screen. */
+.lp-receipt {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+  padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  background: var(--lp-bg);
+  border: 1px dashed var(--lp-border);
+}
+.lp-receipt-row { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+.lp-receipt-row span { color: var(--lp-muted); }
+.lp-receipt-row b { font-weight: 600; color: var(--lp-text); }
+.lp-receipt-row .lp-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--lp-green); flex: 0 0 auto;
+}
+
+/* Library: a quiet shelf illustration, drawn in the notebook's ink. */
+.lp-shelf { margin-top: auto; display: grid; place-items: center; padding: 10px 0 4px; }
+.lp-shelf svg { width: min(220px, 70%); height: auto; color: var(--lp-green); opacity: .9; }
+
+/* ═══ Characters ═══ */
+.lp-chars { text-align: center; }
+.lp-chars .lp-h2 { margin-bottom: 10px; }
+.lp-chars .lp-sub { max-width: 52ch; margin-inline: auto; }
+.lp-char-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: clamp(30px, 4vw, 50px);
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 760px) { .lp-char-grid { grid-template-columns: repeat(5, 1fr); } }
+.lp-char-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 22px 14px;
+  border-radius: var(--radius-lg);
+  background: var(--lp-surface);
+  border: 1px solid var(--lp-border);
+}
+.lp-char-card .lp-char-frame {
+  width: 86px;
+  height: 86px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  /* A quiet wash behind the sprite. The character's own colour is carried by
+     the artwork itself (each sprite falls back to its palette), so the landing
+     stays as calm as the app rather than turning into five colour chips. */
+  background: var(--lp-green-soft);
+}
+.lp-char-card .lp-char-frame svg { display: block; width: 76px; height: 76px; }
+.lp-char-card b { font-family: var(--font-personality); font-size: 16px; font-weight: 700; }
+.lp-char-card span { font-size: 12.5px; line-height: 1.7; color: var(--lp-muted); }
+
+/* ═══ Use Cases — quiet quotes, not another card grid ═══ */
+.lp-uses { display: grid; gap: 0; margin-top: clamp(24px, 3vw, 40px); }
+.lp-use {
+  display: grid;
+  gap: 6px 24px;
+  padding: 26px 0;
+  border-top: 1px solid var(--lp-border);
+  grid-template-columns: 1fr;
+}
+.lp-use:last-child { border-bottom: 1px solid var(--lp-border); }
+@media (min-width: 720px) {
+  .lp-use { grid-template-columns: minmax(220px, 1fr) 1.4fr; align-items: baseline; }
+  .lp-use p { grid-column: 2; }
+}
+.lp-use blockquote {
+  font-family: var(--font-personality);
+  font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--lp-text);
+}
+.lp-use p { font-size: 15px; line-height: 1.9; color: var(--lp-text-2); }
+
+/* ═══ Platforms ═══ */
+.lp-platforms-head { max-width: 56ch; }
+.lp-platform-grid {
+  display: grid;
+  gap: 18px;
+  margin-top: clamp(30px, 4vw, 50px);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 800px) { .lp-platform-grid { grid-template-columns: 1fr 1fr; } }
+.lp-platform {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 30px 28px;
+  border-radius: var(--radius-xl);
+  background: var(--lp-surface);
+  border: 1px solid var(--lp-border);
+}
+.lp-platform h3 {
+  font-family: var(--font-personality);
+  font-size: 20px;
+  font-weight: 700;
+}
+.lp-platform p { font-size: 15px; line-height: 1.9; color: var(--lp-text-2); }
+.lp-platform .lp-btn { align-self: flex-start; margin-top: 6px; }
+.lp-platform-soon { background: var(--lp-bg); }
+/* Room for store links (Cafe Bazaar / Myket) the day the APK ships: an empty
+   slot that already sits in the right place, so adding one changes no layout. */
+.lp-stores { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+
+/* ═══ Final CTA ═══ */
+.lp-final { text-align: center; }
+.lp-final-inner {
+  position: relative;
+  max-width: 760px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.lp-final .lp-display { font-size: clamp(1.7rem, 4vw, 2.9rem); }
+.lp-final .lp-emph-line {
+  font-family: var(--font-personality);
+  font-size: clamp(1.3rem, 3vw, 2.1rem);
+  font-weight: 700;
+  color: var(--lp-green);
+  line-height: 1.5;
+}
+.lp-final .lp-actions { justify-content: center; }
+.lp-final-char {
+  position: absolute;
+  inset-inline-end: 6%;
+  bottom: -10px;
+  width: 64px;
+  opacity: .5;
+  pointer-events: none;
+}
+@media (max-width: 620px) { .lp-final-char { display: none; } }
+
+/* ═══ Footer ═══ */
+.lp-footer {
+  background: var(--lp-surface);
+  border-top: 1px solid var(--lp-border);
+  padding-block: clamp(46px, 6vw, 72px) 30px;
+}
+.lp-footer-grid {
+  display: grid;
+  gap: 34px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 760px) { .lp-footer-grid { grid-template-columns: 1.6fr 1fr 1fr; } }
+.lp-footer-brand { display: flex; flex-direction: column; gap: 12px; max-width: 44ch; }
+.lp-footer-brand .lp-brand { margin-inline-end: 0; }
+.lp-footer-brand p { font-size: 14px; line-height: 1.95; color: var(--lp-text-2); }
+.lp-footer h2, .lp-footer h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lp-muted);
+  margin-bottom: 12px;
+}
+.lp-footer ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.lp-footer a { color: var(--lp-text); text-decoration: none; font-size: 14px; }
+@media (hover: hover) { .lp-footer a:hover { color: var(--lp-green); } }
+.lp-footer .lp-off {
+  color: var(--lp-muted);
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.lp-footer-bottom {
+  margin-top: clamp(30px, 4vw, 46px);
+  padding-top: 20px;
+  border-top: 1px solid var(--lp-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--lp-muted);
+}
+.lp-privacy-note {
+  max-width: 70ch;
+  margin-top: 16px;
+  font-size: 13.5px;
+  line-height: 1.95;
+  color: var(--lp-text-2);
+  scroll-margin-top: 90px;
+}
+
+/* ═══ Motion — one reveal, one bob, one softened CTA. Nothing perpetual. ═══
+   Everything below is opt-in: without the `lp-js` class the page is simply
+   visible, so a script-less visit loses nothing but the fade. */
+.lp-js .lp-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .65s var(--ease-out), transform .65s var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+.lp-js .lp-reveal.is-in { opacity: 1; transform: none; }
+
+/* The stagger, written as CSS so the page needs no inline style attribute (its
+   CSP allows stylesheets only). Each group reads as one gesture arriving in
+   order rather than a wall of things appearing at once. */
+.lp-hero-shot { --d: 140ms; }
+.lp-problem-grid > *:nth-child(2),
+.lp-bento > *:nth-child(2),
+.lp-platform-grid > *:nth-child(2) { --d: 110ms; }
+.lp-problem-grid > *:nth-child(3) { --d: 220ms; }
+.lp-flow > *:nth-child(2) { --d: 110ms; }
+.lp-flow > *:nth-child(3) { --d: 220ms; }
+.lp-flow > *:nth-child(4) { --d: 330ms; }
+.lp-flow > *:nth-child(5) { --d: 440ms; }
+.lp-char-grid > *:nth-child(2) { --d: 90ms; }
+.lp-char-grid > *:nth-child(3) { --d: 180ms; }
+.lp-char-grid > *:nth-child(4) { --d: 270ms; }
+.lp-char-grid > *:nth-child(5) { --d: 360ms; }
+
+@keyframes lpBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* Anchor targets clear the sticky header when jumped to. */
+[id] { scroll-margin-top: 84px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-hero-char,
+  .lp-final-char { animation: none; }
+  .lp-js .lp-reveal { opacity: 1; transform: none; transition: none; }
+  .lp-skip { transition: none; }
+  .lp-btn { transition: none; }
+}
