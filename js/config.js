@@ -8,4 +8,4 @@
    with scripting switched off; this file is simply the single place to change
    it. Replace `daftarche.example` with the real domain when the app is hosted
    at `app.<DOMAIN>`. */
-window.DAFTARCHE_APP_URL = 'https://app.daftrche.ir/';
+window.DAFTARCHE_APP_URL = 'https://app.daftarche.example/';
