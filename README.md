@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # دَفتَرچه — landing
 
 The one-page site for **دَفتَرچه**, a quiet notebook for daily tasks, focus and
@@ -143,3 +144,6 @@ that supports a `_headers` file.
 After deploying, check the card rather than assuming it: share the URL and
 confirm the 1200×630 preview renders, since `og:image` is only fetched by the
 platform, never by the page.
+=======
+
+>>>>>>> d2f25191f29e8c8b82930559f5eba47902472f86
