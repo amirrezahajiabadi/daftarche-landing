@@ -7,6 +7,14 @@
 (function () {
   'use strict';
 
+  /* ── Arming ──
+     First statement on purpose. css/landing.css hides the `.lp-reveal` blocks
+     whenever scripting is available, and a failsafe rule reveals them at 2.5s
+     *unless* this class says otherwise. Setting it here — before anything can
+     throw — is what keeps the scroll reveal in charge for as long as this file
+     is alive, and hands the page back to CSS the moment it is not. */
+  document.documentElement.classList.add('lp-live');
+
   var header = document.querySelector('.lp-header');
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -23,11 +31,12 @@
   }
 
   /* ── Reveal on scroll ──
-     The brief hidden state is armed by the inline `.lp-js` flag in the head, so
-     it exists before the first paint. The check below is driven by the viewport
-     itself rather than by IntersectionObserver: the observer is skipped in some
-     rendering environments, and content that depends on a callback that never
-     runs is content that never appears. A rect test always answers.
+     The brief hidden state comes from css/landing.css, which arms it as soon as
+     scripting is available; `lp-live` above keeps the CSS failsafe out of the
+     way. The check below is driven by the viewport itself rather than by
+     IntersectionObserver: the observer is skipped in some rendering
+     environments, and content that depends on a callback that never runs is
+     content that never appears. A rect test always answers.
 
      Anyone who asked for less motion gets the visible page with no transition,
      and a browser that never scrolls still shows whatever is on screen. */
@@ -83,9 +92,13 @@
   var menuBtn = document.querySelector('.lp-menu-btn');
   var nav = document.getElementById('lpNav');
   if (header && menuBtn && nav) {
+    /* The icon becomes a cross when the panel is open, so the name has to
+       follow it — an × still announced as «منوی صفحه» is the kind of detail a
+       screen reader user only notices when it is wrong. */
     var setOpen = function (open) {
       header.dataset.open = open ? 'true' : 'false';
       menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      menuBtn.setAttribute('aria-label', open ? 'بستن منو' : 'منوی صفحه');
     };
     menuBtn.addEventListener('click', function () {
       setOpen(header.dataset.open !== 'true');

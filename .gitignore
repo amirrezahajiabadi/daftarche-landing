@@ -21,3 +21,11 @@ build/
 .env.local
 *.pem
 *.key
+
+# Python bytecode — the ui-ux-pro-max skill in .claude/skills/ is a Python CLI,
+# and running it writes machine-specific caches beside its own scripts. Those
+# caches belong to the interpreter that last ran it, never to the skill.
+__pycache__/
+*.pyc
+
+robots.txt

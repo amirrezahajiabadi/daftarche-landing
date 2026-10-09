@@ -4,31 +4,35 @@
 <meta charset="UTF-8"/>
 <!-- Content-Security-Policy — the landing's own, deliberately tighter than the
      app's: it loads nothing but same-origin files, so no CDN host is allowed.
-     The one inline script (the `.lp-js` flag that arms the reveal animation)
-     is pinned by hash, the same way the app shell pins its inline theme script. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-jEThls8JuAmDRTUrIEu94u2wvboVvkX6JvEEnhyTnQ0='; style-src 'self'; img-src 'self' data:; font-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'"/>
+     There is no inline script and no inline style on this page, so neither
+     directive needs a hash to pin, and nothing here has to be kept in step with
+     a hash when the page changes. No web app manifest is declared on purpose:
+     the installable thing is the app at app.daftrche.ir, and a manifest served
+     from here could only ever install the landing under the product's name. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="color-scheme" content="light"/>
 <meta name="theme-color" content="#f6efe3"/>
 <title>دَفتَرچه — بفهم الان چه کاری ارزش انجام دادن دارد</title>
 <meta name="description" content="دَفتَرچه یک دفترچهٔ آرام برای کارهای روزانه، تمرکز و خواندن است. به‌جای فهرست بلندِ کارها، کمکت می‌کند بفهمی الان کدام کار ارزش انجام دادن دارد."/>
-<!-- The page's own address, for crawlers and social cards. It is a placeholder
-     until the domain is chosen: replace `daftarche.example` here and in the
-     og:url / og:image tags below with the real domain. The landing owns the
-     root domain; the web app is served from a subdomain of it. -->
-<link rel="canonical" href="https://daftarche.example/"/>
+<!-- The page's own address, for crawlers and social cards. `daftrche.ir` is the
+     domain in CNAME and the landing owns its root; the web app is served from
+     `app.daftrche.ir`, the address js/config.js hands to every [data-app-link].
+     Keep the three in step — canonical, og:url and og:image all describe this
+     one page, and a card is only as good as the URL it points at. -->
+<link rel="canonical" href="https://daftrche.ir/"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="دَفتَرچه"/>
 <meta property="og:locale" content="fa_IR"/>
 <meta property="og:title" content="دَفتَرچه — بفهم الان چه کاری ارزش انجام دادن دارد"/>
 <meta property="og:description" content="به‌جای فهرست بلندِ کارها، دفترچه کمکت می‌کند بفهمی الان کدام کار ارزش انجام دادن دارد."/>
-<meta property="og:url" content="https://daftarche.example/"/>
-<meta property="og:image" content="https://daftarche.example/assets/icons/icon-512.png"/>
-<meta property="og:image:alt" content="نشان دَفتَرچه"/>
-<meta name="twitter:card" content="summary"/>
-<!-- Arming the reveal animation before the first paint: without this flag the
-     page is simply visible, so nothing depends on the script to be readable. -->
-<script>document.documentElement.classList.add('lp-js');</script>
+<meta property="og:url" content="https://daftrche.ir/"/>
+<meta property="og:image" content="https://daftrche.ir/assets/social/og.png"/>
+<meta property="og:image:type" content="image/png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="نشان دَفتَرچه، همراه با این جمله: امروز قرار نیست همه‌چیز را انجام بدهی."/>
+<meta name="twitter:card" content="summary_large_image"/>
 <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg"/>
 <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png"/>
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/Estedad[wght].woff2"/>
@@ -49,8 +53,8 @@
     </a>
 
     <button class="lp-menu-btn" type="button" aria-expanded="false" aria-controls="lpNav" aria-label="منوی صفحه">
-      <svg class="lp-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-      <svg class="lp-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      <svg class="lp-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <svg class="lp-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
 
     <nav class="lp-nav" id="lpNav" aria-label="ناوبری اصلی">
@@ -63,10 +67,9 @@
 
     <!-- Entry to the web app. Its destination comes from js/config.js, the one
          place to edit — every [data-app-link] on the page follows that value.
-         The href below is the same placeholder, so it still works without
-         scripting. The real `app.<DOMAIN>` address is deliberately not fixed
-         yet. -->
-    <a class="lp-btn lp-btn-primary lp-cta" href="https://app.daftarche.example/" data-app-link>ورود به دَفتَرچه</a>
+         The href below carries that same address on its own, so the button
+         still reaches the app with scripting switched off. -->
+    <a class="lp-btn lp-btn-primary lp-cta" href="https://app.daftrche.ir/" data-app-link>ورود به دَفتَرچه</a>
   </div>
 </header>
 
@@ -81,7 +84,7 @@
         <h1 class="lp-display" id="heroTitle">امروز قرار نیست همه‌چیز را انجام بدهی.</h1>
         <p class="lp-lead">دَفتَرچه کمک می‌کند بفهمی الان چه کاری ارزش انجام دادن دارد.</p>
         <div class="lp-actions">
-          <a class="lp-btn lp-btn-primary" href="https://app.daftarche.example/" data-app-link>شروع با دَفتَرچه</a>
+          <a class="lp-btn lp-btn-primary" href="https://app.daftrche.ir/" data-app-link>شروع با دَفتَرچه</a>
           <span class="lp-btn lp-btn-soon">نسخه اندروید <span class="lp-soon-tag">به‌زودی</span></span>
         </div>
         <p class="lp-hero-note">رایگان، بدون حساب کاربری؛ داده‌هایت روی دستگاه خودت می‌ماند.</p>
@@ -95,48 +98,51 @@
     </div>
   </section>
 
-  <!-- ═══ Problem ═══ -->
-  <section class="lp-section" id="problem" aria-labelledby="problemTitle">
-    <div class="lp-wrap">
-      <div class="lp-problem-head lp-reveal">
-        <h2 class="lp-h2" id="problemTitle">وقتی همه‌چیز مهم به نظر می‌رسد، از کجا شروع می‌کنی؟</h2>
-        <p class="lp-sub">سه چیز معمولاً وسط راه می‌ایستد؛ نه فهرست، نه یادآور.</p>
-      </div>
-
-      <ul class="lp-problem-grid">
-        <li class="lp-problem-card lp-reveal">
-          <span class="lp-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h9"/></svg>
-          </span>
-          <h3>کارهای زیاد</h3>
-          <p>هر کاری که می‌نویسی، همان لحظه مهم به نظر می‌رسد — و فهرست بلندتر و سنگین‌تر می‌شود.</p>
-        </li>
-        <li class="lp-problem-card lp-reveal">
-          <span class="lp-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="18" height="10" rx="2.5"/><path d="M22 10.5v3"/><path d="M6 10.6v2.8"/></svg>
-          </span>
-          <h3>انرژی محدود</h3>
-          <p>بعضی روزها فقط زمان کم نیست؛ توان هم کم است. برنامه‌ای که این را نمی‌داند، شکست می‌خورد.</p>
-        </li>
-        <li class="lp-problem-card lp-reveal">
-          <span class="lp-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.4 9.4a2.7 2.7 0 1 1 3.6 2.5c-.6.3-1 .8-1 1.5v.2"/><path d="M12 17.1h.01"/></svg>
-          </span>
-          <h3>تصمیم‌های زیاد</h3>
-          <p>لحظه‌ای که باید انتخاب کنی از کدام شروع کنی، همان لحظه‌ای است که همه‌چیز متوقف می‌شود.</p>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ═══ Decision Layer ═══ -->
+  <!-- ═══ Why — the page's centre: what gets in the way, then the five-step answer ═══
+       These were two sections asking one question from both ends — «وقتی همه‌چیز
+       مهم به نظر می‌رسد، از کجا شروع می‌کنی؟» and «لایهٔ تصمیم». The three problems
+       now read as one compact staircase under the shared heading, and the flow
+       keeps the rest of that heading as its own caption. Nothing is dropped and
+       no card row is left dangling; the anchor stays `#why`, which is the one the
+       header links to. -->
   <section class="lp-section lp-why" id="why" aria-labelledby="whyTitle">
     <div class="lp-wrap">
       <div class="lp-why-head lp-reveal">
-        <p class="lp-eyebrow">لایهٔ تصمیم</p>
+        <p class="lp-eyebrow">چرا دَفتَرچه</p>
         <h2 class="lp-h2" id="whyTitle">دَفتَرچه فقط نمی‌پرسد «چه کارهایی داری؟» <span class="lp-emph">کمکت می‌کند بفهمی «الان کدام را انجام بدهی؟»</span></h2>
-        <p class="lp-lead">تفاوت دَفتَرچه در مرتب‌کردن کارها نیست؛ در کوتاه‌کردن راهِ رسیدن به یک قدم بعدی است. هر بار پنج چیز ساده را کنار هم می‌گذارد.</p>
+        <p class="lp-lead">تفاوت دَفتَرچه در مرتب‌کردن کارها نیست؛ در کوتاه‌کردن راهِ رسیدن به یک قدم بعدی است.</p>
       </div>
+
+      <div class="lp-zig-head lp-reveal">
+        <h3 class="lp-h3">وقتی همه‌چیز مهم به نظر می‌رسد، از کجا شروع می‌کنی؟</h3>
+        <p class="lp-sub">سه چیز معمولاً وسط راه می‌ایستد؛ نه فهرست، نه یادآور.</p>
+      </div>
+
+      <ul class="lp-zig">
+        <li class="lp-reveal">
+          <span class="lp-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h9"/></svg>
+          </span>
+          <h4>کارهای زیاد</h4>
+          <p>هر کاری که می‌نویسی، همان لحظه مهم به نظر می‌رسد — و فهرست بلندتر و سنگین‌تر می‌شود.</p>
+        </li>
+        <li class="lp-reveal">
+          <span class="lp-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="18" height="10" rx="2.5"/><path d="M22 10.5v3"/><path d="M6 10.6v2.8"/></svg>
+          </span>
+          <h4>انرژی محدود</h4>
+          <p>بعضی روزها فقط زمان کم نیست؛ توان هم کم است. برنامه‌ای که این را نمی‌داند، شکست می‌خورد.</p>
+        </li>
+        <li class="lp-reveal">
+          <span class="lp-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.4 9.4a2.7 2.7 0 1 1 3.6 2.5c-.6.3-1 .8-1 1.5v.2"/><path d="M12 17.1h.01"/></svg>
+          </span>
+          <h4>تصمیم‌های زیاد</h4>
+          <p>لحظه‌ای که باید انتخاب کنی از کدام شروع کنی، همان لحظه‌ای است که همه‌چیز متوقف می‌شود.</p>
+        </li>
+      </ul>
+
+      <h3 class="lp-h3 lp-flow-cap lp-reveal">هر بار پنج چیز ساده را کنار هم می‌گذارد.</h3>
 
       <ol class="lp-flow">
         <li class="lp-reveal">
@@ -207,11 +213,11 @@
           <span class="lp-feat-tag">الان چی کار کنیم؟</span>
           <h3>وقتی نمی‌دانی از کجا شروع کنی.</h3>
           <p>دَفتَرچه با توجه به حال، وقت و اولویت‌ها یک کار را پیشنهاد می‌دهد — و می‌گوید چرا همان.</p>
-          <div class="lp-receipt" aria-hidden="true">
-            <span class="lp-receipt-row"><span class="lp-dot"></span><span>حال</span><b>بد نیستم</b></span>
-            <span class="lp-receipt-row"><span class="lp-dot"></span><span>وقت</span><b>کم</b></span>
-            <span class="lp-receipt-row"><span class="lp-dot"></span><span>پیشنهاد</span><b>جواب ایمیل کاری</b></span>
-          </div>
+          <ul class="lp-receipt" aria-label="نمونهٔ پیشنهاد">
+            <li class="lp-receipt-row"><span class="lp-dot" aria-hidden="true"></span><span>حال</span><b>بد نیستم</b></li>
+            <li class="lp-receipt-row"><span class="lp-dot" aria-hidden="true"></span><span>وقت</span><b>کم</b></li>
+            <li class="lp-receipt-row"><span class="lp-dot" aria-hidden="true"></span><span>پیشنهاد</span><b>جواب ایمیل کاری</b></li>
+          </ul>
         </article>
 
         <article class="lp-feat lp-feat-c lp-reveal">
@@ -242,10 +248,14 @@
     </div>
   </section>
 
-  <!-- ═══ Characters ═══ -->
+  <!-- ═══ Characters, and the days they are for ═══
+       One section rather than two. «هر روز شبیه روز قبل نیست» and «برای روزهایی
+       که شبیه هم نیستند» were the same sentence told twice, so the five
+       companions and the four days they answer now share a heading, with the
+       second line kept as the list's own heading instead of a second section. -->
   <section class="lp-section" id="characters" aria-labelledby="charactersTitle">
-    <div class="lp-wrap lp-chars">
-      <div class="lp-reveal">
+    <div class="lp-wrap">
+      <div class="lp-chars-head lp-reveal">
         <h2 class="lp-h2" id="charactersTitle">هر روز شبیه روز قبل نیست.</h2>
         <p class="lp-sub">دفترچه چند همراه دارد که هرکدام برای یک نوع روز ساخته شده‌اند.</p>
       </div>
@@ -277,13 +287,9 @@
           <span>جرقهٔ روزهای خوب.</span>
         </li>
       </ul>
-    </div>
-  </section>
 
-  <!-- ═══ Use Cases ═══ -->
-  <section class="lp-section" id="usecases" aria-labelledby="usecasesTitle">
-    <div class="lp-wrap">
-      <h2 class="lp-h2 lp-reveal" id="usecasesTitle">برای روزهایی که شبیه هم نیستند</h2>
+      <h3 class="lp-h3 lp-days-head lp-reveal">برای روزهایی که شبیه هم نیستند</h3>
+
       <ul class="lp-uses">
         <li class="lp-use lp-reveal">
           <blockquote>امروز وقت کمی دارم.</blockquote>
@@ -305,30 +311,6 @@
     </div>
   </section>
 
-  <!-- ═══ Platforms ═══ -->
-  <section class="lp-section" id="platforms" aria-labelledby="platformsTitle">
-    <div class="lp-wrap">
-      <div class="lp-platforms-head lp-reveal">
-        <h2 class="lp-h2" id="platformsTitle">روی هر صفحه‌ای که هستی، ادامه بده.</h2>
-      </div>
-      <div class="lp-platform-grid">
-        <div class="lp-platform lp-reveal">
-          <h3>وب</h3>
-          <p>برای کامپیوتر، Windows، iPhone و iPad</p>
-          <a class="lp-btn lp-btn-primary" href="https://app.daftarche.example/" data-app-link>ورود به دَفتَرچه</a>
-        </div>
-        <div class="lp-platform lp-platform-soon lp-reveal">
-          <h3>اندروید</h3>
-          <p>نسخه Android — به‌زودی</p>
-          <span class="lp-btn lp-btn-soon">به‌زودی</span>
-          <!-- جای لینک فروشگاه‌ها (بازار / مایکت) برای روز انتشار APK؛
-               خالی می‌ماند تا جایی برای مقصد ساختگی ساخته نشود. -->
-          <div class="lp-stores"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ═══ Final CTA ═══ -->
   <section class="lp-section lp-final" id="start" aria-labelledby="startTitle">
     <div class="lp-wrap lp-final-inner lp-reveal">
@@ -336,7 +318,7 @@
       <h2 class="lp-display" id="startTitle">لازم نیست امروز همه‌چیز را انجام بدهی.</h2>
       <p class="lp-emph-line">فقط قدم بعدی را پیدا کن.</p>
       <div class="lp-actions">
-        <a class="lp-btn lp-btn-primary" href="https://app.daftarche.example/" data-app-link>شروع با دَفتَرچه</a>
+        <a class="lp-btn lp-btn-primary" href="https://app.daftrche.ir/" data-app-link>شروع با دَفتَرچه</a>
       </div>
     </div>
   </section>
@@ -355,18 +337,24 @@
         <p>دفترچه‌ای برای اینکه بفهمی الان چه کاری ارزش انجام دادن دارد — یک اپ وب آرام برای کارهای روزانه، تمرکز و خواندن. بدون حساب کاربری و بدون سرور؛ داده‌هایت روی دستگاه خودت می‌ماند.</p>
       </div>
 
+      <!-- Where it runs. This is the whole of what the old «روی هر صفحه‌ای که
+           هستی» section said, minus its fourth filled CTA: the web app is the
+           link, Android is a note because it has not shipped, and the store
+           links (بازار / مایکت) join this list the day the APK does — no slot
+           is held open for a destination that does not exist yet. -->
       <nav aria-label="دسترسی‌ها">
         <h3>دسترسی</h3>
         <ul>
-          <li><a href="https://app.daftarche.example/" data-app-link>ورود به وب‌اپ</a></li>
+          <li><a href="https://app.daftrche.ir/" data-app-link>ورود به وب‌اپ</a></li>
           <li><span class="lp-off">اندروید <span class="lp-soon-tag">به‌زودی</span></span></li>
         </ul>
+        <p class="lp-footer-note">وب‌اپ روی کامپیوتر، Windows، iPhone و iPad کار می‌کند.</p>
       </nav>
 
-      <nav aria-label="درباره">
+      <nav aria-label="بیشتر">
         <h3>بیشتر</h3>
         <ul>
-          <li><a href="#about">درباره دَفتَرچه</a></li>
+          <li><a href="#why">چرا دَفتَرچه؟</a></li>
           <li><a href="#privacy">حریم خصوصی</a></li>
         </ul>
       </nav>
